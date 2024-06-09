@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>milanopuma</title>
+    <link rel="stylesheet" href="{% static 'chat/styles.css' %}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="پیام خود را بنویسید..." />
+            <button onclick="sendMessage()">ارسال</button>
+        </div>
+    </div>
+
+    <script>
+        function fetchMessages() {
+            fetch('/messages')
+                .then(response => response.json())
+                .then(messages => {
+                    const chatMessages = document.getElementById('chat-messages');
+                    chatMessages.innerHTML = '';
+                    messages.forEach(message => {
+                        const messageElement = document.createElement('div');
+                        messageElement.className = 'message';
+                        messageElement.textContent = message.content;
+                        chatMessages.appendChild(messageElement);
+                    });
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                });
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+            if (message.trim() !== '') {
+                fetch('/send/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: 'کاربر', content: message })
+                }).then(() => {
+                    messageInput.value = '';
+                    fetchMessages();
+                });
+            }
+        }
+
+        // Fetch messages initially and then every 2 seconds
+        fetchMessages();
+        setInterval(fetchMessages, 2000);
+    </script>
+</body>
+</html>
