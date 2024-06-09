@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        .form-container {
+            margin: 20px 0;
+        }
+        .form-container input {
+            padding: 10px;
+            margin: 5px 0;
+            width: 300px;
+        }
+        .form-container button {
+            padding: 10px;
+            width: 100px;
+            cursor: pointer;
+        }
+        .message-container, .user-container {
+            margin: 20px 0;
+            width: 80%;
+            max-width: 600px;
+        }
+        .message-container ul, .user-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .message-container li, .user-container li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat Server</h1>
+
+    <div class="form-container">
+        <form id="username-form">
+            <input type="text" id="username" placeholder="Enter your username" required>
+            <button type="submit">Join</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <form id="message-form">
+            <input type="text" id="message" placeholder="Enter your message" required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <div class="user-container">
+        <h2>Connected Users</h2>
+        <ul id="user-list"></ul>
+    </div>
+
+    <div class="message-container">
+        <h2>Messages</h2>
+        <ul id="message-list"></ul>
+    </div>
+
+    <script>
+        document.getElementById('username-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            fetch('/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'username=' + encodeURIComponent(username)
+            }).then(() => {
+                fetchUsers();
+            });
+        });
+
+        document.getElementById('message-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const message = document.getElementById('message').value;
+            fetch('/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'message=' + encodeURIComponent(message)
+            }).then(() => {
+                fetchMessages();
+            });
+        });
+
+        function fetchUsers() {
+            fetch('/users')
+                .then(response => response.json())
+                .then(users => {
+                    const userList = document.getElementById('user-list');
+                    userList.innerHTML = '';
+                    users.forEach(user => {
+                        const li = document.createElement('li');
+                        li.textContent = user;
+                        userList.appendChild(li);
+                    });
+                });
+        }
+
+        function fetchMessages() {
+            fetch('/messages')
+                .then(response => response.json())
+                .then(messages => {
+                    const messageList = document.getElementById('message-list');
+                    messageList.innerHTML = '';
+                    messages.forEach(message => {
+                        const li = document.createElement('li');
+                        li.textContent = message;
+                        messageList.appendChild(li);
+                    });
+                });
+        }
+
+        setInterval(() => {
+            fetchUsers();
+            fetchMessages();
+        }, 3000); // Update every 3 seconds
+    </script>
+</body>
+</html>
