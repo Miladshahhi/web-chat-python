@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    direction: rtl; /* راست به چپ */
+}
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin: auto;
+    width: 90%;
+    max-width: 600px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ccc;
+}
+.message {
+    background-color: #e1ffc7;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* برای شکستن خطوط طولانی */
+}
+.message:nth-child(odd) {
+    background-color: #d1e7ff;
+}
+.chat-input {
+    display: flex;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    box-sizing: border-box; /* برای کنترل حاشیه‌ها و پرکردن‌ها */
+}
+.chat-input button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.chat-input button:hover {
+    background-color: #45a049;
+}
+
+@media (max-width: 600px) {
+    .chat-container {
+        width: 100%;
+    }
+    .chat-input input {
+        margin-right: 5px;
+    }
+    .chat-input button {
+        padding: 10px;
+    }
+}
